@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IR System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <h1 class="mt-5">Information Retrieval System</h1>
+    <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="process-tab" data-toggle="tab" href="#process" role="tab"
+               aria-controls="process">Process</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="representation-tab" data-toggle="tab" href="#representation" role="tab" aria-controls="representation">Representation</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="invert-tab" data-toggle="tab" href="#invert" role="tab" aria-controls="invert">Invert</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="query-tab" data-toggle="tab" href="#query" role="tab"
+               aria-controls="query">Query</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="result-tab" data-toggle="tab" href="#result" role="tab" aria-controls="result">Result</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="evaluation-tab" data-toggle="tab" href="#evaluation" role="tab" aria-controls="evaluation">Evaluation</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="cluster-tab" data-toggle="tab" href="#cluster" role="tab" aria-controls="cluster">Cluster</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="word2vec-tab" data-toggle="tab" href="#word2vec" role="tab"
+               aria-controls="word2vec">Word2Vec</a>
+        </li>
+    </ul>
+
+    <div class="tab-content" id="myTabContent">
+        <!-------------------------------------------------------------------------------------->
+        <div class="tab-pane fade show active" id="process" role="tabpanel" aria-labelledby="process-tab">
+            <form action="/preprocess" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Preprocess</button>
+            </form>
+            {% if show_preprocessed %}
+            <p class="mt-3">Preprocessed Text (First 10 Records)</p>
+            <pre>{{ preprocessed_text }}</pre>
+            {% endif %}
+        </div>
+        <!------------------------------------------------------------------------------------------->
+        <div class="tab-pane fade" id="representation" role="tabpanel" aria-labelledby="representation-tab">
+            <form action="/representation" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Representation</button>
+            </form>
+
+            {% if show_representation %}
+            <h3 class="mt-3">Representation</h3>
+            <pre>{{ df_docs_representation }}</pre>
+            {% endif %}
+        </div>
+        <!--------------------------------------------------------------------------->
+        <div class="tab-pane fade" id="invert" role="tabpanel" aria-labelledby="invert-tab">
+            <form action="/invert" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Create Inverted Index</button>
+            </form>
+
+            {% if show_invert %}
+            <h3 class="mt-3">Inverted Index</h3>
+            <pre>{{ invert_text }}</pre>
+            {% endif %}
+        </div>
+        <!------------------------------------------------------------------------->
+        <div class="tab-pane fade" id="query" role="tabpanel" aria-labelledby="query-tab">
+            <form action="/query" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="query">Enter Query</label>
+                    <input type="text" class="form-control" id="query" name="query" required value="{{ query_text }}">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit Query</button>
+            </form>
+            {% if show_query %}
+            <h3 class="mt-3">Query Results</h3>
+
+            <pre>{{ query_results }}</pre>
+            {% endif %}
+        </div>
+        <!------------------------------------------------------------------------------------->
+        <div class="tab-pane fade" id="result" role="tabpanel" aria-labelledby="result-tab">
+            <form action="/result" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="query">Enter Query</label>
+                    <input type="text" class="form-control" id="query" name="query" required value="{{ query_text }}">
+                </div>
+                <button type="submit" class="btn btn-primary">Show Result</button>
+            </form>
+            {% if show_results %}
+            <h3 class="mt-3">Results</h3>
+            <pre>{{ results }}</pre>
+            {% endif %}
+        </div>
+        <!----------------------------------------------------------------->
+        <div class="tab-pane fade" id="evaluation" role="tabpanel" aria-labelledby="evaluation-tab">
+            <form action="/evaluation" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Evaluation Result</button>
+            </form>
+            {% if show_query %}
+            <h3 class="mt-3">Results</h3>
+            <pre>{{ result }}</pre>
+            {% endif %}
+        </div>
+        <!----------------------------------------------------------------------------------------->
+
+        <div class="tab-pane fade" id="cluster" role="tabpanel" aria-labelledby="cluster-tab">
+            <form action="/cluster" method="POST" class="mt-3">
+
+                <label for="dataset">Dataset:</label>
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-primary">Cluster Documents</button>
+            </form>
+            {% if show_clusters %}
+            <h2>Cluster Plot</h2>
+            <img src="{{ image_path }}" alt="Cluster Plot" class="img-fluid">
+            {% endif %}
+        </div>
+        <!------------------------------->
+        <div class="tab-pane fade" id="word2vec" role="tabpanel" aria-labelledby="word2vec-tab">
+            <form action="/word2vec" method="POST" class="mt-3">
+                <div class="form-group">
+                    <label for="dataset">Select Dataset</label>
+                    <select class="form-control" id="dataset" name="dataset" required>
+                        <option value="Antique">Antique</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="word">Enter Word for Similarity Check</label>
+                    <input type="text" class="form-control" id="word" name="word" placeholder="Enter a word">
+                </div>
+                <button type="submit" class="btn btn-primary">Train Word2Vec</button>
+            </form>
+            {% if show_word2vec %}
+            <h3 class="mt-3">Word2Vec Results</h3>
+            <p>Most Common Words:</p>
+            <ul>
+                {% for word in most_common_words %}
+                <li>{{ word }}</li>
+                {% endfor %}
+            </ul>
+            {% if similarity_scores %}
+            <p>Similarity Scores:</p>
+            <ul>
+                {% for score in similarity_scores %}
+                <li>{{ score }}</li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No similarity results available.</p>
+            {% endif %}
+            {% endif %}
+        </div>
+
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Activate the tab from the URL hash, if any
+        var urlHash = window.location.hash;
+        if (urlHash) {
+            $('.nav-tabs a[href="' + urlHash + '"]').tab('show');
+        }
+
+        // Store the last clicked tab in localStorage
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+
+        // Retrieve and show the last active tab from localStorage
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('.nav-tabs a[href="' + activeTab + '"]').tab('show');
+        }
+    });
+</script>
+</body>
+</html>
